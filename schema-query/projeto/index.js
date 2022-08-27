@@ -4,6 +4,14 @@ const typeDefs = gql`
     # Criar um novo tipo Scalar para retornar uma data
     scalar Date
 
+    # Criando um produto
+    type Produto {
+        nome: String!
+        preco: Float!
+        desconto: Float
+        precoComDesconto: Float
+    }
+
     # Definindo tipo para usuário
     type Usuario {
         id: ID!
@@ -18,11 +26,23 @@ const typeDefs = gql`
     type Query {
         ola: String!  
         horaAtual: Date!
-        usuarioLogado: Usuario     
+        usuarioLogado: Usuario   
+        produtoEmDestaque: Produto  
+        numerosMegaSena: [Int!]!
     }
 `
 //Resolvers retornam os dados
 const resolvers = {
+    //Resolvendo produtos com desconto
+    Produto: {
+        precoComDesconto(produto){
+            if(produto.desconto){
+                return produto.preco - (produto.preco * produto.desconto )
+            } else {
+                return produto.preco
+            }
+        }
+    },
     //resolver para tratar o diferenciador de salario
     Usuario: {
         salario(usuario) {
@@ -46,6 +66,20 @@ const resolvers = {
                 salario_real: 1234.56,
                 vip: true
             }
+        },
+        produtoEmDestaque() {
+            return {
+                nome: 'Notebook Gamer',
+                preco: 4890.89,
+                desconto: 0.5
+            }
+        },
+        numerosMegaSena() {
+            // return [4,8,13,27,33,54]
+            const crescente = (a, b) => a - b
+            return Array(6).fill(0)
+            .map(n => parseInt(Math.random() * 60 + 1))
+            .sort(crescente)
         }
     }
 }
@@ -59,4 +93,4 @@ server.listen().then(({ url }) => {
     console.log(`Executando em ${url}`)
 })
 
-//Continua na aula 15. Desafio Produto
+//Continua na aula 19. Retornando Array
