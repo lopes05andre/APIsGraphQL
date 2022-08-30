@@ -1,5 +1,23 @@
 const { ApolloServer, gql} = require('apollo-server')
 
+//Array de usuários
+const usuarios = [{
+    id: 1,
+    nome: 'João Silva',
+    email: 'jsilva@email.com',
+    idade: 45
+},{
+    id: 2,
+    nome: 'Andre Luiz',
+    email: 'aluiz@email.com',
+    idade: 36
+},{
+    id: 3,
+    nome: 'Daniela Moraes',
+    email: 'dmoraes@email.com',
+    idade: 28
+}]
+
 const typeDefs = gql`
     # Criar um novo tipo Scalar para retornar uma data
     scalar Date
@@ -29,6 +47,7 @@ const typeDefs = gql`
         usuarioLogado: Usuario   
         produtoEmDestaque: Produto  
         numerosMegaSena: [Int!]!
+        usuarios: [Usuario]
     }
 `
 //Resolvers retornam os dados
@@ -80,6 +99,9 @@ const resolvers = {
             return Array(6).fill(0)
             .map(n => parseInt(Math.random() * 60 + 1))
             .sort(crescente)
+        },
+        usuarios() {
+            return usuarios
         }
     }
 }
@@ -93,4 +115,4 @@ server.listen().then(({ url }) => {
     console.log(`Executando em ${url}`)
 })
 
-//Continua na aula 19. Retornando Array
+//Continua na aula 20. Passando Parâmetros para as Consultas
